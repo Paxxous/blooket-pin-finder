@@ -1,34 +1,47 @@
-import json, random, threading
+import json, random, threading, requests
 from urllib.request import urlopen
 
 
 def getAndSee():
 
   while True:
-    # Create a random pin
-    pin = ''
 
-    for i in range(6):
-      pin += str(random.randint(1, 9))
+    try:
+      # Create a random pin
+      pin = ''
 
-    # Get the pin and then convert it to a readable dictionary
-    response = urlopen(f'https://fb.blooket.com/c/firebase/id?id={pin}')
-    formattedResponse = json.loads(response.read())
+      for i in range(6):
+        pin += str(random.randint(1, 9))
 
-    # Read the dictionary and find if the game actually exists
-    if formattedResponse['success'] == False:
-      pass
+      # Get the pin and then convert it to a readable dictionary
+      response = requests.get(f'https://fb.blooket.com/c/firebase/id?id={pin}')
+      formattedResponse = response.json()
 
-    elif formattedResponse['success'] == True:
+      # Read the dictionary and find if the game actually exists
+      if formattedResponse['success'] == False:
+        pass
 
-      # Append to a file
-      f = open('pins.txt', 'a')
-      f.write(pin + "\n")
+      elif formattedResponse['success'] == True:
+
+        # Append to a file
+        f = open('pins.txt', 'a')
+        f.write(pin + "\n")
+        f.close()
+
+        print(f"Found, {pin}")
 
 
-    else:
-      # If this happens idk what happened
-      print("none")
+      else:
+        # If this happens idk what happened
+        print("none")
+
+    except KeyboardInterrupt:
+      print("Ending")
+
+    # except:
+    #   print("Error :(")
+    #   pass
+
 
 # Get the number of threads and then run that number of threads
 threadNumber = int(input("How many threads would you like to run?\n"))
