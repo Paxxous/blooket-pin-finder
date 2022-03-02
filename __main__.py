@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import json, random, threading, requests
-from urllib.request import urlopen
 
 
 def getAndSee():
